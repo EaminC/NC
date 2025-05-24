@@ -1,1 +1,5 @@
-requests>=2.31.0 
+requests>=2.31.0
+vllm>=0.2.0
+torch>=2.0.0
+transformers>=4.36.0
+accelerate>=0.25.0 

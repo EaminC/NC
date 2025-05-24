@@ -1,6 +1,6 @@
 # AI Model Testing Framework
 
-A modular and extensible framework for testing different AI models through the Infini-AI API. This framework provides a clean interface for interacting with various AI models and comparing their responses.
+A modular and extensible framework for testing different AI models through both API and vLLM deployment. This framework provides a clean interface for interacting with various AI models and comparing their responses.
 
 [![GitHub](https://img.shields.io/github/license/EaminC/NC)](https://github.com/EaminC/NC/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
@@ -13,6 +13,9 @@ A modular and extensible framework for testing different AI models through the I
   - GLM-4 9B Chat
   - Llama 3.3 70B Instruct
   - And more...
+- Multiple deployment options:
+  - API-based testing
+  - vLLM local deployment
 - Easy configuration through JSON
 - Simple and clean API interface
 - Error handling and logging
@@ -23,19 +26,35 @@ A modular and extensible framework for testing different AI models through the I
 
 ```
 ai-model-test/
-├── src/                    # Source code
-│   ├── services/          # Service layer
+├── api/                    # API-based testing
+│   ├── src/               # Source code
+│   │   ├── services/      # Service layer
+│   │   │   ├── __init__.py
+│   │   │   └── model_service.py    # Core service implementation
+│   │   └── utils/         # Utilities
+│   │       ├── __init__.py
+│   │       └── config.py           # Configuration management
+│   ├── tests/             # Test scripts
 │   │   ├── __init__.py
-│   │   └── model_service.py    # Core service implementation
-│   └── utils/             # Utilities
-│       ├── __init__.py
-│       └── config.py           # Configuration management
-├── tests/                 # Test scripts
-│   ├── __init__.py
-│   ├── test_one_model.py      # Single model test script
-│   └── test_all_models.py     # All models test script
-├── config/               # Configuration
-│   └── config.json            # Model and API configuration
+│   │   ├── test_one_model.py      # Single model test script
+│   │   └── test_all_models.py     # All models test script
+│   └── config/            # Configuration
+│       └── config.json            # Model and API configuration
+├── vllm/                   # vLLM deployment
+│   ├── src/               # Source code
+│   │   ├── services/      # Service layer
+│   │   │   ├── __init__.py
+│   │   │   └── vllm_service.py    # vLLM service implementation
+│   │   └── utils/         # Utilities
+│   │       ├── __init__.py
+│   │       └── config.py           # Configuration management
+│   ├── tests/             # Test scripts
+│   │   ├── __init__.py
+│   │   └── test_vllm.py           # vLLM test script
+│   ├── models/            # Model weights
+│   │   └── README.md              # Model download instructions
+│   └── config/            # Configuration
+│       └── config.json            # vLLM configuration
 ├── README.md
 ├── requirements.txt
 └── .gitignore
@@ -45,6 +64,8 @@ ai-model-test/
 
 - Python 3.8+
 - pip (Python package manager)
+- CUDA-compatible GPU (for vLLM deployment)
+- Sufficient disk space for model weights
 
 ## Installation
 
@@ -61,62 +82,70 @@ cd NC
 pip install -r requirements.txt
 ```
 
-3. Configure your API key:
-   - Copy `config/config.json` to `config/config.local.json`
-   - Update the API key in `config/config.local.json`
+3. Configure your API key (for API-based testing):
+
+   - Copy `api/config/config.json` to `api/config/config.local.json`
+   - Update the API key in `api/config/config.local.json`
+
+4. Download model weights (for vLLM deployment):
+   - Follow instructions in `vllm/models/README.md`
+   - Place downloaded weights in `vllm/models/` directory
 
 ## Usage
 
-### List Available Models
+### API-based Testing
+
+#### List Available Models
 
 To see all available models and their descriptions:
 
 ```bash
-python tests/test_one_model.py --list-models
+python api/tests/test_one_model.py --list-models
 ```
 
-### Test Single Model
+#### Test Single Model
 
 Use `test_one_model.py` to test a specific model:
 
 ```bash
 # Basic usage
-python tests/test_one_model.py --model deepseek-r1
+python api/tests/test_one_model.py --model deepseek-r1
 
 # Custom message
-python tests/test_one_model.py --model deepseek-r1 --message "Hello, please introduce yourself"
+python api/tests/test_one_model.py --model deepseek-r1 --message "Hello, please introduce yourself"
 ```
 
-### Test All Models
+#### Test All Models
 
 Use `test_all_models.py` to test all configured models:
 
 ```bash
 # Basic usage
-python tests/test_all_models.py
+python api/tests/test_all_models.py
 
 # Custom message
-python tests/test_all_models.py --message "Hello, please introduce yourself"
+python api/tests/test_all_models.py --message "Hello, please introduce yourself"
 ```
 
-### Custom Testing
+### vLLM Deployment
 
-You can create your own test script using the ModelService:
+#### Start vLLM Server
 
-```python
-from src.services.model_service import ModelService
+```bash
+python vllm/src/services/vllm_service.py --model path/to/model --port 8000
+```
 
-# Initialize service
-service = ModelService()
+#### Test vLLM Deployment
 
-# Chat with a specific model
-response = service.chat("deepseek-r1", "Hello, how are you?")
-print(response)
+```bash
+python vllm/tests/test_vllm.py --port 8000 --message "Hello, please introduce yourself"
 ```
 
 ## Configuration
 
-The `config/config.json` file contains all configuration settings:
+### API Configuration
+
+The `api/config/config.json` file contains all API configuration settings:
 
 ```json
 {
@@ -133,33 +162,47 @@ The `config/config.json` file contains all configuration settings:
 }
 ```
 
-### Adding New Models
+### vLLM Configuration
 
-To add a new model:
+The `vllm/config/config.json` file contains vLLM deployment settings:
 
-1. Add the model configuration to `config/config.json`
-2. The framework will automatically detect and support the new model
+```json
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "max_parallel_seqs": 256
+  },
+  "model": {
+    "tensor_parallel_size": 1,
+    "gpu_memory_utilization": 0.9,
+    "max_model_len": 2048
+  }
+}
+```
 
 ## Development
 
 ### Project Structure
 
-- `src/services/`: Contains the core service classes
-  - `model_service.py`: Main service implementation
-- `src/utils/`: Contains utility functions and helpers
-  - `config.py`: Configuration management
-- `tests/`: Contains test scripts
-  - `test_one_model.py`: Single model test implementation
-  - `test_all_models.py`: All models test implementation
-- `config/`: Contains configuration files
-  - `config.json`: Main configuration file
+- `api/`: API-based testing implementation
+  - `src/services/`: Core service classes
+  - `src/utils/`: Utility functions
+  - `tests/`: Test scripts
+  - `config/`: Configuration files
+- `vllm/`: vLLM deployment implementation
+  - `src/services/`: vLLM service classes
+  - `src/utils/`: Utility functions
+  - `tests/`: Test scripts
+  - `models/`: Model weights
+  - `config/`: Configuration files
 
 ### Adding New Features
 
-1. Create new service classes in `src/services/`
-2. Add utility functions in `src/utils/`
-3. Write tests in `tests/`
-4. Update configuration in `config/`
+1. Create new service classes in appropriate `src/services/` directory
+2. Add utility functions in appropriate `src/utils/` directory
+3. Write tests in appropriate `tests/` directory
+4. Update configuration in appropriate `config/` directory
 
 ## Contributing
 
@@ -176,6 +219,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## Acknowledgments
 
 - Infini-AI for providing the API
+- vLLM team for the deployment framework
 - All contributors to this project
 
 ## Contact
