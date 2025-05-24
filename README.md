@@ -12,6 +12,25 @@ A simple framework for testing different AI models through the Infini-AI API.
 - Easy configuration through JSON
 - Simple and clean API interface
 - Error handling and logging
+- Modular and extensible architecture
+
+## Project Structure
+
+```
+ai-model-test/
+├── src/                    # Source code
+│   ├── services/          # Service layer
+│   │   └── model_service.py
+│   └── utils/             # Utilities
+│       └── config.py
+├── tests/                 # Test scripts
+│   └── test_models.py
+├── config/               # Configuration
+│   └── config.json
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
 
 ## Setup
 
@@ -25,37 +44,35 @@ cd [repo-name]
 2. Install dependencies:
 
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
-3. Configure your API key in `config.json`
+3. Configure your API key in `config/config.json`
 
 ## Usage
 
 Run the test script:
 
 ```bash
-python test.py
-```
-
-## Project Structure
-
-```
-.
-├── README.md
-├── config.json          # Configuration file
-├── model_service.py     # Core service class
-├── test.py             # Main test script
-└── .gitignore          # Git ignore rules
+python tests/test_models.py
 ```
 
 ## Configuration
 
-Edit `config.json` to:
+Edit `config/config.json` to:
 
 - Update API key
 - Add/remove models
 - Modify model descriptions
+
+## Development
+
+The project follows a modular structure:
+
+- `src/services/`: Contains the core service classes
+- `src/utils/`: Contains utility functions and helpers
+- `tests/`: Contains test scripts
+- `config/`: Contains configuration files
 
 ## License
 
