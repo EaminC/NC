@@ -67,6 +67,14 @@ pip install -r requirements.txt
 
 ## Usage
 
+### List Available Models
+
+To see all available models and their descriptions:
+
+```bash
+python tests/test_one_model.py --list-models
+```
+
 ### Test Single Model
 
 Use `test_one_model.py` to test a specific model:
