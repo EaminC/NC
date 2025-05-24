@@ -1,0 +1,24 @@
+{
+  "api": {
+    "base_url": "https://cloud.infini-ai.com/maas/v1/chat/completions",
+    "api_key": "sk-v7djet7vcpa7smlo"
+  },
+  "models": {
+    "deepseek-r1": {
+      "name": "deepseek-r1",
+      "description": "DeepSeek R1 Model"
+    },
+    "qwen3-32b": {
+      "name": "qwen3-32b",
+      "description": "Qwen 32B Model"
+    },
+    "glm-4-9b-chat": {
+      "name": "glm-4-9b-chat",
+      "description": "GLM-4 9B Chat Model"
+    },
+    "llama-3.3-70b-instruct": {
+      "name": "llama-3.3-70b-instruct",
+      "description": "Llama 3.3 70B Instruct Model"
+    }
+  }
+}
