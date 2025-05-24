@@ -1,0 +1,20 @@
+{
+  "api": {
+    "base_url": "https://cloud.infini-ai.com/maas/v1/chat/completions",
+    "api_key": "sk-v7djet7vcpa7smlo"
+  },
+  "models": {
+    "gemma-2-27b-it": {
+      "name": "gemma-2-27b-it",
+      "description": "Google Gemma 2 27B Model"
+    },
+    "llama-3-infini-8b-instruct": {
+      "name": "llama-3-infini-8b-instruct",
+      "description": "Meta Llama 3 Infini 8B Instruct Model"
+    },
+    "llama-3.3-70b-instruct": {
+      "name": "llama-3.3-70b-instruct",
+      "description": "Meta Llama 3.3 70B Instruct Model"
+    }
+  }
+}

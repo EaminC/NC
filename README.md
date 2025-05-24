@@ -12,6 +12,7 @@ A modular and extensible framework for testing different AI models through the I
   - Qwen 32B
   - GLM-4 9B Chat
   - Llama 3.3 70B Instruct
+  - And more...
 - Easy configuration through JSON
 - Simple and clean API interface
 - Error handling and logging
@@ -31,7 +32,8 @@ ai-model-test/
 │       └── config.py           # Configuration management
 ├── tests/                 # Test scripts
 │   ├── __init__.py
-│   └── test_models.py          # Model testing script
+│   ├── test_one_model.py      # Single model test script
+│   └── test_all_models.py     # All models test script
 ├── config/               # Configuration
 │   └── config.json            # Model and API configuration
 ├── README.md
@@ -65,12 +67,28 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Basic Usage
+### Test Single Model
 
-Run the test script to test all configured models:
+Use `test_one_model.py` to test a specific model:
 
 ```bash
-python tests/test_models.py
+# Basic usage
+python tests/test_one_model.py --model deepseek-r1
+
+# Custom message
+python tests/test_one_model.py --model deepseek-r1 --message "Hello, please introduce yourself"
+```
+
+### Test All Models
+
+Use `test_all_models.py` to test all configured models:
+
+```bash
+# Basic usage
+python tests/test_all_models.py
+
+# Custom message
+python tests/test_all_models.py --message "Hello, please introduce yourself"
 ```
 
 ### Custom Testing
@@ -123,7 +141,8 @@ To add a new model:
 - `src/utils/`: Contains utility functions and helpers
   - `config.py`: Configuration management
 - `tests/`: Contains test scripts
-  - `test_models.py`: Model testing implementation
+  - `test_one_model.py`: Single model test implementation
+  - `test_all_models.py`: All models test implementation
 - `config/`: Contains configuration files
   - `config.json`: Main configuration file
 
@@ -144,7 +163,7 @@ To add a new model:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/EaminC/NC/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/EaminC/NC/blob/main/LICENSE) file for details
 
 ## Acknowledgments
 

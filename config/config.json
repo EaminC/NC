@@ -8,17 +8,89 @@
       "name": "deepseek-r1",
       "description": "DeepSeek R1 Model"
     },
+    "qwen3-30b-a3b": {
+      "name": "qwen3-30b-a3b",
+      "description": "Qwen 3 30B Latest Open Source Model"
+    },
+    "deepseek-v3": {
+      "name": "deepseek-v3",
+      "description": "DeepSeek V3 Model"
+    },
+    "qwen3-235b-a22b": {
+      "name": "qwen3-235b-a22b",
+      "description": "Qwen 3 235B Latest Open Source Model"
+    },
     "qwen3-32b": {
       "name": "qwen3-32b",
-      "description": "Qwen 32B Model"
+      "description": "Qwen 3 32B Latest Open Source Model"
+    },
+    "chatglm3": {
+      "name": "chatglm3",
+      "description": "Zhipu AI ChatGLM3 Model"
+    },
+    "deepseek-r1-distill-qwen-32b": {
+      "name": "deepseek-r1-distill-qwen-32b",
+      "description": "DeepSeek Latest Open Source Model"
     },
     "glm-4-9b-chat": {
       "name": "glm-4-9b-chat",
-      "description": "GLM-4 9B Chat Model"
+      "description": "Zhipu GLM-4 9B Chat Model"
     },
-    "llama-3.3-70b-instruct": {
-      "name": "llama-3.3-70b-instruct",
-      "description": "Llama 3.3 70B Instruct Model"
+    "llama-2-7b-chat": {
+      "name": "llama-2-7b-chat",
+      "description": "Meta Llama 2 7B Chat Model"
+    },
+    "megrez-3b-instruct": {
+      "name": "megrez-3b-instruct",
+      "description": "Wuwen XinQiong Self-developed Model"
+    },
+    "qwen1.5-14b-chat": {
+      "name": "qwen1.5-14b-chat",
+      "description": "Qwen 1.5 14B Chat Model"
+    },
+    "qwen2-72b-instruct": {
+      "name": "qwen2-72b-instruct",
+      "description": "Qwen 2 72B Instruct Model"
+    },
+    "qwen2-7b-instruct": {
+      "name": "qwen2-7b-instruct",
+      "description": "Qwen 2 7B Instruct Model"
+    },
+    "qwen2.5-14b-instruct": {
+      "name": "qwen2.5-14b-instruct",
+      "description": "Qwen 2.5 14B Instruct Model"
+    },
+    "qwen2.5-32b-instruct": {
+      "name": "qwen2.5-32b-instruct",
+      "description": "Qwen 2.5 32B Instruct Model"
+    },
+    "qwen2.5-72b-instruct": {
+      "name": "qwen2.5-72b-instruct",
+      "description": "Qwen 2.5 72B Instruct Model"
+    },
+    "qwen2.5-7b-instruct": {
+      "name": "qwen2.5-7b-instruct",
+      "description": "Qwen 2.5 7B Instruct Model"
+    },
+    "qwen2.5-coder-32b-instruct": {
+      "name": "qwen2.5-coder-32b-instruct",
+      "description": "Qwen 2.5 32B Code Generation Model"
+    },
+    "qwen3-14b": {
+      "name": "qwen3-14b",
+      "description": "Qwen 3 14B Model"
+    },
+    "qwen3-8b": {
+      "name": "qwen3-8b",
+      "description": "Qwen 3 8B Model"
+    },
+    "qwq-32b": {
+      "name": "qwq-32b",
+      "description": "Qwen Popular Open Source Model"
+    },
+    "yi-1.5-34b-chat": {
+      "name": "yi-1.5-34b-chat",
+      "description": "01.AI Yi 1.5 34B Chat Model"
     }
   }
 }
