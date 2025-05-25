@@ -5,61 +5,73 @@
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Llama 2 7B model on GPU 0"
+      "description": "Llama 2 7B model on GPU 0",
+      "port": 8000
     },
     "1": {
       "model": "models/qwen-14b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Qwen 14B model on GPU 1"
+      "description": "Qwen 14B model on GPU 1",
+      "port": 8001
     },
     "2": {
       "model": "models/mistral-7b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Mistral 7B model on GPU 2"
+      "description": "Mistral 7B model on GPU 2",
+      "port": 8002
     },
     "3": {
       "model": "models/yi-34b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Yi 34B model on GPU 3"
+      "description": "Yi 34B model on GPU 3",
+      "port": 8003
     },
     "4": {
       "model": "models/deepseek-67b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "DeepSeek 67B model on GPU 4"
+      "description": "DeepSeek 67B model on GPU 4",
+      "port": 8004
     },
     "5": {
       "model": "models/qwen-72b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Qwen 72B model on GPU 5"
+      "description": "Qwen 72B model on GPU 5",
+      "port": 8005
     },
     "6": {
       "model": "models/llama2-70b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Llama 2 70B model on GPU 6"
+      "description": "Llama 2 70B model on GPU 6",
+      "port": 8006
     },
     "7": {
       "model": "models/qwen-32b",
       "tensor_parallel_size": 1,
       "gpu_memory_utilization": 0.9,
       "max_model_len": 2048,
-      "description": "Qwen 32B model on GPU 7"
+      "description": "Qwen 32B model on GPU 7",
+      "port": 8007
     }
   },
   "server": {
     "host": "0.0.0.0",
-    "port": 8000,
     "max_parallel_seqs": 256
+  },
+  "client": {
+    "default_timeout": 300,
+    "retry_attempts": 3,
+    "retry_delay": 1
   }
 }

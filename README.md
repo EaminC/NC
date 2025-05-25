@@ -15,7 +15,13 @@ A modular and extensible framework for testing different AI models through both 
   - And more...
 - Multiple deployment options:
   - API-based testing
-  - vLLM local deployment
+  - vLLM local deployment with server-client architecture
+- **New vLLM Features:**
+  - Multi-GPU support with independent model deployment per GPU
+  - Server-client architecture for distributed inference
+  - Health monitoring and automatic failover
+  - Load balancing across multiple servers
+  - RESTful API for each model server
 - Easy configuration through JSON
 - Simple and clean API interface
 - Error handling and logging
@@ -40,21 +46,25 @@ ai-model-test/
 │   │   └── test_all_models.py     # All models test script
 │   └── config/            # Configuration
 │       └── config.json            # Model and API configuration
-├── vllm/                   # vLLM deployment
+├── vllm/                   # vLLM deployment (Server-Client Architecture)
 │   ├── src/               # Source code
 │   │   ├── services/      # Service layer
 │   │   │   ├── __init__.py
-│   │   │   └── vllm_service.py    # vLLM service implementation
+│   │   │   ├── vllm_server.py     # Individual model server
+│   │   │   ├── vllm_client.py     # Client for connecting to servers
+│   │   │   └── server_manager.py  # Multi-server management
 │   │   └── utils/         # Utilities
 │   │       ├── __init__.py
 │   │       └── config.py           # Configuration management
 │   ├── tests/             # Test scripts
 │   │   ├── __init__.py
-│   │   └── test_vllm.py           # vLLM test script
+│   │   └── test_client.py         # Client test script
+│   ├── scripts/           # Utility scripts
+│   │   └── start_servers.sh       # Server startup script
 │   ├── models/            # Model weights
 │   │   └── README.md              # Model download instructions
 │   └── config/            # Configuration
-│       └── config.json            # vLLM configuration
+│       └── config.json            # vLLM configuration with per-GPU settings
 ├── README.md
 ├── requirements.txt
 └── .gitignore
@@ -64,7 +74,7 @@ ai-model-test/
 
 - Python 3.8+
 - pip (Python package manager)
-- CUDA-compatible GPU (for vLLM deployment)
+- CUDA-compatible GPU(s) (for vLLM deployment)
 - Sufficient disk space for model weights
 
 ## Installation
@@ -127,18 +137,107 @@ python api/tests/test_all_models.py
 python api/tests/test_all_models.py --message "Hello, please introduce yourself"
 ```
 
-### vLLM Deployment
+### vLLM Server-Client Deployment
 
-#### Start vLLM Server
+The new vLLM implementation uses a server-client architecture where each GPU runs an independent model server on its own port.
+
+#### Server Management
+
+##### Start All Servers
 
 ```bash
-python vllm/src/services/vllm_service.py --model path/to/model --port 8000
+# Using the management script
+python -m vllm.src.services.server_manager --action start
+
+# Using the shell script
+./vllm/scripts/start_servers.sh --action start
 ```
 
-#### Test vLLM Deployment
+##### Start Specific GPU Server
 
 ```bash
-python vllm/tests/test_vllm.py --port 8000 --message "Hello, please introduce yourself"
+# Start server on GPU 0
+python -m vllm.src.services.server_manager --action start --gpu 0
+
+# Using shell script
+./vllm/scripts/start_servers.sh --action start --gpu 0
+```
+
+##### Check Server Status
+
+```bash
+python -m vllm.src.services.server_manager --action status
+```
+
+##### Stop Servers
+
+```bash
+# Stop all servers
+python -m vllm.src.services.server_manager --action stop
+
+# Stop specific GPU server
+python -m vllm.src.services.server_manager --action stop --gpu 0
+```
+
+##### Monitor Servers
+
+```bash
+python -m vllm.src.services.server_manager --action monitor --monitor-interval 30
+```
+
+#### Client Usage
+
+##### Interactive Client
+
+```bash
+# Start interactive client
+python -m vllm.tests.test_client --action interactive
+```
+
+##### List Available Servers
+
+```bash
+python -m vllm.tests.test_client --action list
+```
+
+##### Health Check
+
+```bash
+# Check all servers
+python -m vllm.tests.test_client --action health
+
+# Check specific GPU
+python -m vllm.tests.test_client --action health --gpu 0
+```
+
+##### Generate Text
+
+```bash
+# Generate on specific GPU
+python -m vllm.tests.test_client --action generate --gpu 0 --prompt "Hello, world!"
+
+# Auto-select best server
+python -m vllm.tests.test_client --action generate --prompt "Hello, world!"
+
+# With model preference
+python -m vllm.tests.test_client --action generate --prompt "Hello!" --model-preference llama qwen
+```
+
+#### Direct Server Access
+
+Each server provides a RESTful API:
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Get server info
+curl http://localhost:8000/info
+
+# Generate text
+curl -X POST http://localhost:8000/generate \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Hello, world!", "max_tokens": 100}'
 ```
 
 ## Configuration
@@ -164,38 +263,57 @@ The `api/config/config.json` file contains all API configuration settings:
 
 ### vLLM Configuration
 
-The `vllm/config/config.json` file contains vLLM deployment settings:
+The `vllm/config/config.json` file contains vLLM deployment settings with per-GPU configuration:
 
 ```json
 {
+  "gpus": {
+    "0": {
+      "model": "models/llama2-7b",
+      "tensor_parallel_size": 1,
+      "gpu_memory_utilization": 0.9,
+      "max_model_len": 2048,
+      "description": "Llama 2 7B model on GPU 0",
+      "port": 8000
+    },
+    "1": {
+      "model": "models/qwen-14b",
+      "tensor_parallel_size": 1,
+      "gpu_memory_utilization": 0.9,
+      "max_model_len": 2048,
+      "description": "Qwen 14B model on GPU 1",
+      "port": 8001
+    }
+  },
   "server": {
     "host": "0.0.0.0",
-    "port": 8000,
     "max_parallel_seqs": 256
   },
-  "model": {
-    "tensor_parallel_size": 1,
-    "gpu_memory_utilization": 0.9,
-    "max_model_len": 2048
+  "client": {
+    "default_timeout": 300,
+    "retry_attempts": 3,
+    "retry_delay": 1
   }
 }
 ```
 
+### Key Features of New vLLM Architecture
+
+1. **Independent GPU Deployment**: Each GPU runs its own model server on a unique port
+2. **RESTful API**: Each server provides a standardized REST API
+3. **Health Monitoring**: Built-in health checks and status monitoring
+4. **Load Balancing**: Client can automatically select the best available server
+5. **Model Preference**: Support for model-based server selection
+6. **Graceful Degradation**: Automatic failover when servers are unavailable
+7. **Batch Management**: Easy start/stop/restart of multiple servers
+
 ## Development
 
-### Project Structure
+### Adding New Models
 
-- `api/`: API-based testing implementation
-  - `src/services/`: Core service classes
-  - `src/utils/`: Utility functions
-  - `tests/`: Test scripts
-  - `config/`: Configuration files
-- `vllm/`: vLLM deployment implementation
-  - `src/services/`: vLLM service classes
-  - `src/utils/`: Utility functions
-  - `tests/`: Test scripts
-  - `models/`: Model weights
-  - `config/`: Configuration files
+1. Update `vllm/config/config.json` with new GPU configuration
+2. Download model weights to `vllm/models/` directory
+3. Start the server for the new GPU
 
 ### Adding New Features
 
